@@ -3,15 +3,6 @@
 In this study, four common deep learning architectures were used: TCN, Transformer, 1D-CNN, and Bi-LSTM. Preprocessed sEMG and IMU signals were fed into the TCN-Transformer and 1D-CNN branches to extract modality-specific features. The resulting feature vectors were concatenated and then processed by a bidirectional cross-attention mechanism, enabling deep fusion of cross-modal information by allowing sEMG and IMU signals to interact and highlight important features from each modality. The fused feature representations were then passed through the Bi-LSTM module, which captured long-term temporal dependencies in both directions. After this, two independent fully connected layers generated final predictions for action category and motion intensity. Motion intensity was characterized by the angular velocity metric, which could serve as a control command for the robot's rotational speed. The combination of TCN and Transformer captures local temporal structures and long-range dependencies within sEMG signals, while 1D-CNN extracts key motion features from IMU data. Overall, this fusion process—consisting of feature extraction, cross-attention fusion, Bi-LSTM temporal processing, and final prediction—improves action recognition accuracy and stabilizes motion intensity estimation by effectively merging complementary information from both modalities.
 This folder contains a minimal, clean training pipeline focused on preprocessing and training four variants:
 
-- LSTM classifier (`lstm`)
-- Temporal Convolutional Network (`tcn`)
-- Dual-branch EMG+IMU (`dual`) with four interaction modes:
-  - `none` baseline (no cross-modal attention)
-  - `emg_to_imu` (EMG attends to IMU)
-  - `imu_to_emg` (IMU attends to EMG)
-  - `bidirectional` (both directions)
-- Dual-branch EMG-only baseline (`dual_no_imu`)
-
 ## Data format
 
 All training scripts expect NumPy arrays:
@@ -48,24 +39,10 @@ python -m open_source.train --model dual_no_imu --data-root /path/to/data --num-
 - `--seed`: random seed (default 42).
 - `--transpose-input`: transpose `X.npy` from `[N, T, C]` to `[N, C, T]` at load time (single-branch) or applies to both EMG/IMU for dual models.
 
-### Outputs
-
-Each run writes to `runs/<timestamp>_<model>/`:
-
-- `model.pt` – trained weights
-- `config.json` – training configuration
-- `metrics.json` – final train/val accuracy and loss
-- `classification_report.txt` – sklearn classification report
-- `confusion_matrix.npy/.txt` – confusion matrix values
 
 ## Minimal preprocessing helper
 
 `python -m open_source.preprocess --input X_raw.npy --labels y_raw.npy --output-dir ./processed --transpose` will normalize per-channel (z-score) and optionally transpose to `[N, C, T]`. Adjust or extend as needed for your raw data.
 
-## Requirements
-
-Install dependencies with:
-
-```bash
-pip install -r requirements.txt
-```
+## Contact
+If you have any question about this project, please feel free to contact lichang@stu.qut.edu.cn
