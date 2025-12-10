@@ -46,3 +46,4 @@ python -m open_source.train --model dual_no_imu --data-root /path/to/data --num-
 
 ## Contact
 If you have any question about this project, please feel free to contact lichang@stu.qut.edu.cn
+datas are coming soon
